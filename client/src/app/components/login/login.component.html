@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+  <h2>Вход</h2>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <label>Логин</label>
+  <input formControlName="login" />
+  <div *ngIf="form.get('login')?.invalid && form.get('login')?.touched" class="error">
+    Логин обязателен
+  </div>
+
+  <label>Пароль</label>
+  <input type="password" formControlName="password" />
+  <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error">
+    Пароль обязателен
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">Войти</button>
+  <p>Нет аккаунта? <a routerLink="/register">Зарегистрироваться</a></p>
+</form>

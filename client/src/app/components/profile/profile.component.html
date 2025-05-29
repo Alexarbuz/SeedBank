@@ -1,0 +1,31 @@
+<div class="profile-container">
+  <h2>Личный кабинет</h2>
+
+  <form (ngSubmit)="saveChanges()" #form="ngForm">
+    <label>
+      Имя:
+      <input name="first_name" [(ngModel)]="userData.first_name" required />
+    </label>
+
+    <label>
+      Фамилия:
+      <input name="last_name" [(ngModel)]="userData.last_name" required />
+    </label>
+
+    <label>
+      Отчество:
+      <input name="patronymic" [(ngModel)]="userData.patronymic" />
+    </label>
+    <label>
+      Логин:
+      <input name="login" [(ngModel)]="userData.login" />
+    </label>
+
+    <label>
+      Новый пароль:
+      <input type="password" name="password" [(ngModel)]="userData.password" />
+    </label>
+
+    <button type="submit" [disabled]="form.invalid">Сохранить</button>
+  </form>
+</div>

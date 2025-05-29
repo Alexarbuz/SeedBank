@@ -1,0 +1,303 @@
+// collection.component.scss
+
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.header-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;     /* отступ сверху/снизу */
+  margin-bottom: 0.25rem;/* уменьшаем отступ до таблицы */
+}
+
+.header-bar .btn-add {
+  z-index: 1;
+  margin-bottom: -0.25rem; /* «поднимает» кнопку ещё ближе к таблице */
+}
+
+.header-bar h2 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 1.5rem;
+  color: #2c3e50;
+  white-space: nowrap;
+}
+.loading {
+  text-align: center;
+  color: #555;
+  font-style: italic;
+}
+
+.error {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* Обёртка для горизонтального скролла */
+.seed-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Основные стили таблицы */
+.seed-table {
+  width: 100%;
+  min-width: 1200px; /* задаёт минимальную ширину, чтобы все столбцы уместились */
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* «Липкая» шапка */
+.seed-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #097cef;
+  color: #fff;
+  z-index: 1;
+}
+
+/* Ячейки таблицы */
+.seed-table th,
+.seed-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.875rem;
+}
+
+/* Кнопки */
+.btn-add {
+  background-color: #38a169;
+  color: white;
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+}
+
+.btn-add:hover {
+  background-color: #2f855a;
+}
+
+.btn-edit {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-edit:hover {
+  background-color: #2b6cb0;
+}
+
+.btn-delete {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c53030;
+}
+
+/* Модальное окно и фон */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  z-index: 1001;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+  max-height: 90vh;        // ограничиваем высоту модалки
+  overflow-y: auto;        // вертикальная прокрутка при необходимости
+  width: 90vw;             // адаптивная ширина
+  max-width: 600px;        // не шире 600px
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modal label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.modal input:focus,
+.modal select:focus {
+  border-color: #097cef;
+  outline: none;
+}
+
+.modal button {
+  padding: 10px 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 8px;
+  min-width: 100px;
+  transition: background-color 0.3s ease;
+}
+
+.modal button[type="submit"] {
+  background-color: #38a169;
+  color: white;
+}
+
+.modal button[type="submit"]:hover {
+  background-color: #2f855a;
+}
+
+.modal button[type="button"] {
+  background-color: #e2e8f0;
+  color: black;
+}
+
+.modal button[type="button"]:hover {
+  background-color: #cbd5e0;
+}
+
+.modal form > div.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+.sortable-header {
+  cursor: pointer;
+}
+/* Мобильная адаптация: блоковая версия таблицы */
+@media (max-width: 768px) {
+  .seed-table,
+  .seed-table thead,
+  .seed-table tbody,
+  .seed-table th,
+  .seed-table td,
+  .seed-table tr {
+    display: block;
+  }
+
+  .seed-table thead th {
+    display: none;
+  }
+
+  .seed-table td {
+    position: relative;
+    padding-left: 50%;
+    border: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .seed-table td::before {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    width: 45%;
+    font-weight: bold;
+  }
+
+  .seed-table td:nth-of-type(1)::before { content: "ID"; }
+  .seed-table td:nth-of-type(2)::before { content: "Название"; }
+  .seed-table td:nth-of-type(3)::before { content: "Вид"; }
+  .seed-table td:nth-of-type(4)::before { content: "Род"; }
+  .seed-table td:nth-of-type(5)::before { content: "Семейство"; }
+  .seed-table td:nth-of-type(6)::before { content: "Дата сбора"; }
+  .seed-table td:nth-of-type(7)::before { content: "Выполненных"; }
+  .seed-table td:nth-of-type(8)::before { content: "Всхожесть"; }
+  .seed-table td:nth-of-type(9)::before { content: "Влажность"; }
+  .seed-table td:nth-of-type(10)::before { content: "GPS высота"; }
+  .seed-table td:nth-of-type(11)::before { content: "GPS долгота"; }
+  .seed-table td:nth-of-type(12)::before { content: "GPS широта"; }
+  .seed-table td:nth-of-type(13)::before { content: "Вес 1000 семян"; }
+  .seed-table td:nth-of-type(14)::before { content: "Изображение"; }
+  .seed-table td:nth-of-type(15)::before { content: "Количество"; }
+  .seed-table td:nth-of-type(16)::before { content: "Красная книга РФ"; }
+  .seed-table td:nth-of-type(17)::before { content: "Красная книга СО"; }
+  .seed-table td:nth-of-type(18)::before { content: "Место сбора"; }
+  .seed-table td:nth-of-type(19)::before { content: "Account ID"; }
+}
+.seed-table {
+  position: relative;
+}
+
+.header-cell {
+  cursor: pointer;
+  position: relative;
+}
+
+.dropdown {
+  position: fixed;
+  transform: translateY(110px);
+  background: #fff;
+  padding: 1px;
+  border: 1px solid #ccc;
+  z-index: 100;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    padding: 4px 8px;
+    cursor: pointer;
+    &:hover { background: #eee; }
+  }
+}

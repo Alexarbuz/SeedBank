@@ -1,0 +1,12 @@
+# Angular
+client/.angular/
+client/node_modules/
+
+# Node.js
+server/node_modules/
+
+# Общие
+.DS_Store
+.idea
+*.log
+dist/

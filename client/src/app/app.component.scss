@@ -1,0 +1,153 @@
+/* Общий стиль навбара */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #1165e3, #167fe9, #42a5f5);
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Левый блок: логотип */
+.navbar-left {
+  position: absolute;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  color: #e3f2fd;
+  font-size: 1.5rem;
+  font-weight: bold;
+  gap: 0.5rem;
+}
+
+.brand-name {
+  font-weight: 700;
+}
+
+/* Центр: навигация */
+.navbar-center {
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+}
+
+.navbar-center a {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
+  transition: 0.3s ease;
+}
+
+.navbar-center a:hover {
+  color: #bbdefb;
+  border-bottom: 2px solid #bbdefb;
+}
+
+.navbar-center a.active {
+  border-bottom: 2px solid #e3f2fd;
+}
+
+/* Разделитель под навбаром */
+.divider {
+  margin: 0;
+  border: none;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+:root {
+  --bg: #ffffff;
+  --text: #333333;
+  --hover: #fce4ec;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.navbar-center a,
+.navbar-right a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.btn-simple:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.btn-outline {
+  border: 2px solid #fff;
+}
+
+.btn-outline:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.user-menu {
+  position: static;
+  
+
+}
+
+.user-icon {
+  font-size: 1.75rem;
+  color: #fff;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.user-menu:hover .user-icon {
+  transform: scale(1.1);
+}
+
+.dropdown {
+  position: absolute;
+  top: 90%;
+  right: 0;
+  background: rgba(255, 255, 255, 0.863);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+  border-radius: 8px;
+  min-width: 160px;
+  overflow: hidden;
+  opacity: 0;
+  z-index: 10000;
+  transform: translateY(-10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Состояние открытия */
+.dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown li {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text);
+  transition: background 0.2s;
+}
+
+.dropdown li:hover {
+  background: var(--hover);
+  color: var(--accent);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,29 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+  <h2>Регистрация</h2>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <label>Имя</label>
+  <input formControlName="first_name" />
+
+  <label>Фамилия</label>
+  <input formControlName="last_name" />
+
+  <label>Отчество (необязательно)</label>
+  <input formControlName="patronymic" />
+  
+  <label>Логин</label>
+  <input formControlName="login" />
+  <div *ngIf="form.get('login')?.invalid && form.get('login')?.touched" class="error">
+    Логин обязателен и минимум 3 символа
+  </div>
+
+  <label>Пароль</label>
+  <input type="password" formControlName="password" />
+  <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error">
+    Пароль обязателен и минимум 6 символов
+  </div>
+
+
+  <button type="submit" [disabled]="form.invalid">Зарегистрироваться</button>
+  <p>Уже есть аккаунт? <a routerLink="/login">Войти</a></p>
+</form>

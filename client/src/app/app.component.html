@@ -1,0 +1,29 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    🌸 <span class="brand-name">Банк семян</span>
+  </div>
+
+  <div class="navbar-center">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Главная</a>
+    <a routerLink="/collection" routerLinkActive="active">Коллекция</a>
+  </div>
+
+  <div class="navbar-right">
+    <ng-container *ngIf="!authIsLoggedIn(); else userMenu">
+      <a routerLink="/login" class="btn-outline">Войти</a>
+    </ng-container>
+
+    <ng-template #userMenu>
+      <div class="user-menu" (mouseenter)="showDropdown = true" (mouseleave)="showDropdown = false">
+        <span class="user-icon">👤</span>
+        <ul class="dropdown" [class.open]="showDropdown">
+          <li (click)="goToProfile()">Личный кабинет</li>
+          <li (click)="logout()">Выйти</li>
+        </ul>
+      </div>
+    </ng-template>
+  </div>
+</nav>
+
+<hr class="divider" />
+<router-outlet></router-outlet>
