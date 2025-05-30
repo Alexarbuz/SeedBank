@@ -28,4 +28,10 @@ export class AppComponent {
   goToProfile() {
     this.router.navigate(['/profile']);
   }
+   goToAdminPanel() {
+    this.router.navigate(['/adminpanel']);
+  }
+  isAdmin(): boolean {
+    return this.auth.getUserRole() === 'ADMIN';
+  }
 }

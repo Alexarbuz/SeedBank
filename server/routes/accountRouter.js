@@ -19,7 +19,21 @@ router.get(
   authMiddleware,
   AccountController.getAccountById
 );
-
+router.post(
+  '/',
+  authMiddleware,
+  checkRoleMiddleware(['ADMIN']),
+  [
+    
+    body('first_name').notEmpty().withMessage('Имя обязательно'),
+    body('last_name').notEmpty().withMessage('Фамилия обязательна'),
+    body('patronymic'),
+    body('login').isLength({ min: 3 }).withMessage('Логин должен быть не менее 3 символов'),
+    body('password').isLength({ min: 6 }).withMessage('Пароль должен быть не менее 6 символов'),
+    body('role_id').isInt().withMessage('ID роли должен быть числом')
+  ],
+  AccountController.createAccount
+);
 // Обновление аккаунта
 router.put(
   '/:id',
@@ -49,5 +63,6 @@ router.delete(
   checkRoleMiddleware(['ADMIN']),
   AccountController.deleteAccount
 );
+
 
 module.exports = router;

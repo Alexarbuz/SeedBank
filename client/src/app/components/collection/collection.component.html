@@ -1,5 +1,7 @@
 <div class="header-bar">
   <h2>Коллекция семян</h2>
+  <input type="text" placeholder="Поиск по названию..." class="search-input"
+         [(ngModel)]="searchTerm" />
   <button *ngIf="isAdmin()" (click)="startAdd()" class="btn-add">➕ Добавить семя</button>
 </div>
 <div *ngIf="loading" class="loading">Загрузка данных…</div>
@@ -40,15 +42,8 @@
         GPS высота
         <span *ngIf="sortColumn==='gpsaltitude'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
       </th>
-      <th class="sortable-header" (click)="setSort('gpslatitude')">
-        GPS долгота
-      <span *ngIf="sortColumn==='gpslatitude'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      
-      <th class="sortable-header" (click)="setSort('gpslongitude')">
-        GPS широта
-      <span *ngIf="sortColumn==='gpslongitude'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
+      <th class="sortable-header" (click)="setSort('gpslatitude')">GPS широта</th>
+      <th class="sortable-header" (click)="setSort('gpslongitude')">GPS долгота</th>
       <th class="sortable-header" (click)="setSort('weight_of1000seeds')">
         Вес 1000
         <span *ngIf="sortColumn==='weight_of1000seeds'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
@@ -71,7 +66,11 @@
   <tbody>
     <tr *ngFor="let s of getFilteredAndSortedSeeds()">
       <td>{{ s.seed_id }}</td>
-      <td>{{ s.seed_name }}</td>
+      <td>
+        <a [routerLink]="['/seeds', s.seed_id]" class="clickable-link">
+          {{ s.seed_name }}
+        </a>
+      </td>
       <td>{{ s.Specie.name_of_specie }}</td>
       <td>{{ s.Specie.Genus.name_of_genus }}</td>
       <td>{{ s.Specie.Genus.Family.name_of_family }}</td>

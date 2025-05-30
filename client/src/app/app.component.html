@@ -18,6 +18,7 @@
         <span class="user-icon">👤</span>
         <ul class="dropdown" [class.open]="showDropdown">
           <li (click)="goToProfile()">Личный кабинет</li>
+          <li *ngIf="isAdmin()" (click)="goToAdminPanel()">Панель администратора</li>
           <li (click)="logout()">Выйти</li>
         </ul>
       </div>

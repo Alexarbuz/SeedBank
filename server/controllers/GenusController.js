@@ -6,7 +6,8 @@ exports.getAllGenera = async (req, res) => {
       include: [
         { model: Family },
         { model: Specie }
-      ]
+      ],
+      order: [['id', 'ASC']]
     });
     res.json(genera);
   } catch (error) {

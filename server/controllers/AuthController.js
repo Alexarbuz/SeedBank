@@ -10,7 +10,7 @@ const generateAccessToken = (account) => {
       role: account.Role.name_of_role // Используем название роли из связанной модели
     },
     process.env.JWT_ACCESS_SECRET,
-    { expiresIn: '15m' }
+    { expiresIn: '7d' }
   );
 };
 const generateRefreshToken = (account) => {

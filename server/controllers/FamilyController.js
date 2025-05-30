@@ -3,7 +3,8 @@ const { Family, Genus } = require('../models/models');
 exports.getAllFamilies = async (req, res) => {
   try {
     const families = await Family.findAll({
-      include: [{ model: Genus }]
+      include: [{ model: Genus }],
+      order: [['id', 'ASC']]
     });
     res.json(families);
   } catch (error) {
@@ -15,6 +16,7 @@ exports.getFamilyById = async (req, res) => {
   try {
     const family = await Family.findByPk(req.params.id, {
       include: [{ model: Genus }]
+      
     });
     if (!family) return res.status(404).json({ error: 'Family not found' });
     res.json(family);

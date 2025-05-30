@@ -3,7 +3,8 @@ const { BookLevel, RedBook } = require('../models/models');
 exports.getAllBookLevels = async (req, res) => {
   try {
     const bookLevels = await BookLevel.findAll({
-      include: [{ model: RedBook }]
+      include: [{ model: RedBook }],
+      order: [['id', 'ASC']]
     });
     res.json(bookLevels);
   } catch (error) {

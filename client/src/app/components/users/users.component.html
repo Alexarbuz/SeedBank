@@ -1,0 +1,71 @@
+<div class="user-page">
+  <div class="header-bar">
+    <h2>Пользователи</h2>
+    <button class="btn-add" (click)="startAdd()">➕ Добавить пользователя</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Загрузка данных…</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="user-table-wrapper" *ngIf="!loading && accounts.length">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Имя</th>
+          <th>Фамилия</th>
+          <th>Отчество</th>
+          <th>Логин</th>
+          <th>Роль</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let acc of accounts">
+          <td data-label="Имя">{{ acc.first_name }}</td>
+          <td data-label="Фамилия">{{ acc.last_name }}</td>
+          <td data-label="Отчество">{{ acc.patronymic }}</td>
+          <td data-label="Логин">{{ acc.login }}</td>
+          <td data-label="Роль">{{ acc.Role.name_of_role }}</td>
+          <td data-label="Действия">
+            <button class="btn-edit" (click)="startEdit(acc)">✎</button>
+            <button class="btn-delete" (click)="deleteAccount(acc)">🗑</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Модальное окно -->
+  <div class="modal-backdrop" *ngIf="editingAccount"></div>
+  <div class="modal" *ngIf="editingAccount">
+    <h3>{{ editingAccount.id ? 'Редактировать' : 'Добавить' }} пользователя</h3>
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label>Имя</label>
+      <input type="text" formControlName="first_name" />
+
+      <label>Фамилия</label>
+      <input type="text" formControlName="last_name" />
+
+      <label>Отчество</label>
+      <input type="text" formControlName="patronymic" />
+
+      <label>Логин</label>
+      <input type="text" formControlName="login" />
+
+      <label>Пароль</label>
+      <input type="password" formControlName="password" />
+
+      <label>Роль</label>
+      <select formControlName="role_id">
+        <option [ngValue]="null" disabled>Выберите роль</option>
+        <option *ngFor="let role of roles" [ngValue]="role.id">{{ role.name_of_role }}</option>
+      </select>
+
+      <div class="buttons">
+        <button type="submit" [disabled]="form.invalid">Сохранить</button>
+        <button type="button" (click)="closeModal()">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -9,7 +9,8 @@ exports.getAllSpecies = async (req, res) => {
           include: [Family]
         },
         { model: Seed }
-      ]
+      ],
+      order: [['id', 'ASC']]
     });
     res.json(species);
   } catch (error) {

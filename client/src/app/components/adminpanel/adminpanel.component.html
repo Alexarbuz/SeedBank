@@ -1,0 +1,15 @@
+<div class="admin-panel">
+  <h1>Панель администратора</h1>
+  <div class="section-buttons">
+    <button *ngFor="let section of sections"
+            routerLink="{{ section.path }}"
+            class="section-button">
+      {{ section.label }}
+    </button>
+  </div>
+  <div class="user-management">
+    <button routerLink="/adminpanel/user" class="user-button">
+      Управлять аккаунтами пользователей
+    </button>
+  </div>
+</div>

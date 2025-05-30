@@ -11,7 +11,8 @@ exports.getAllSeeds = async (req, res) => {
               model: Genus,
               include: [Family]
             }
-          ]
+          ],
+          order: [['id', 'ASC']]
         },
         { model: RedBook, as: 'RedBookRF' },
         { model: RedBook, as: 'RedBookSO' },
@@ -37,7 +38,11 @@ exports.getSeedById = async (req, res) => {
               include: [Family]
             }
           ]
-        }
+        },
+        { model: RedBook, as: 'RedBookRF' },
+        { model: RedBook, as: 'RedBookSO' },
+        { model: PlaceOfCollection },
+        { model: Account }
       ]
     });
     if (!seed) return res.status(404).json({ error: 'Seed not found' });

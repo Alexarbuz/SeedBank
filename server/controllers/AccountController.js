@@ -26,7 +26,8 @@ exports.getAllAccounts = async (req, res) => {
   try {
     const accounts = await Account.findAll({
       attributes: { exclude: ['password'] },
-      include: [Role]
+      include: [Role],
+      order: [['id', 'ASC']]
     });
     res.json(accounts);
   } catch (error) {
@@ -46,6 +47,43 @@ exports.getAccountById = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ message: 'Ошибка получения данных пользователя' });
+  }
+};
+exports.createAccount = async (req, res) => {
+  try {
+    const { first_name, last_name, patronymic, login, password, role_id } = req.body;
+
+    if (!first_name || !last_name || !login || !password || !role_id) {
+      return res.status(400).json({ message: 'Заполните все обязательные поля' });
+    }
+
+    const existingAccount = await Account.findOne({ where: { login } });
+    if (existingAccount) {
+      return res.status(400).json({ message: 'Пользователь с таким логином уже существует' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    
+    const newAccount = await Account.create({
+      first_name,
+      last_name,
+      patronymic,
+      login,
+      password: hashedPassword,
+      role_id
+    });
+
+    res.status(201).json({
+      id: newAccount.id,
+      login: newAccount.login,
+      first_name: newAccount.first_name,
+      last_name: newAccount.last_name,
+      patronymic: newAccount.patronymic,
+      role_id: newAccount.role_id
+    });
+  } catch (error) {
+    console.error('Ошибка при создании пользователя:', error);
+    res.status(500).json({ message: 'Ошибка создания пользователя' });
   }
 };
 

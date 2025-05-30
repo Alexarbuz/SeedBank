@@ -1,0 +1,52 @@
+<!-- specie.component.html -->
+<div class="specie-page">
+  <div class="header-bar">
+    <h2>Таблица видов</h2>
+    <button class="btn-add" (click)="startAdd()">➕ Добавить вид</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Загрузка данных…</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!loading" class="specie-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Вид</th>
+        <th>Род</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of species">
+        <td>{{ s.id }}</td>
+        <td>{{ s.name_of_specie }}</td>
+        <td>{{ s.Genus.name_of_genus }}</td>
+        <td>
+          <button class="btn-edit" (click)="startEdit(s)">✎</button>
+          <button class="btn-delete" (click)="deleteSpecie(s)">🗑</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="editingSpecie"></div>
+  <div class="modal" *ngIf="editingSpecie">
+    <h3>{{ editingSpecie.id ? 'Редактировать' : 'Добавить' }} вид</h3>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label>Название вида</label>
+      <input formControlName="name_of_specie" />
+
+      <label>Род</label>
+      <select formControlName="genus_id">
+        <option *ngFor="let g of genera" [value]="g.id">{{ g.name_of_genus }}</option>
+      </select>
+
+      <div class="buttons">
+        <button type="submit" [disabled]="form.invalid">Сохранить</button>
+        <button type="button" (click)="closeModal()">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -9,11 +9,13 @@ import { RedbookService } from '../../services/redbook.service';
 import { PlaceOfCollectionService } from '../../services/placeofcollection.service';
 import { Specie } from '../../models/specie.model';
 import { RedBook, PlaceOfCollection } from '../../models/seed.model';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-collection',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormsModule],
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.scss']
 })
@@ -30,6 +32,7 @@ export class CollectionComponent implements OnInit {
   sortColumn: string | null = null;
   sortDirection: 'asc' | 'desc' | null = null;
   filterToggles: { [key: string]: boolean } = {};
+  searchTerm: string = '';
 
   species: Specie[] = [];
   redBooksRF: RedBook[] = [];
@@ -184,26 +187,33 @@ export class CollectionComponent implements OnInit {
 
   getFilteredAndSortedSeeds(): Seed[] {
     let res = [...this.seeds];
-    Object.entries(this.filters).forEach(([k, v]) => {
+    // Поиск
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      res = res.filter(s => s.seed_name.toLowerCase().includes(term));
+    }
+    // Фильтры
+    Object.entries(this.filters).forEach(([k,v]) => {
       res = res.filter(s => {
-        switch (k) {
-          case 'specie':    return s.Specie.name_of_specie === v;
-          case 'genus':     return s.Specie.Genus.name_of_genus === v;
-          case 'family':    return s.Specie.Genus.Family.name_of_family === v;
-          case 'place':     return s.PlaceOfCollection.place_of_collection === v;
-          case 'redBookRF': return s.RedBookRF.category === v;
-          case 'redBookSO': return s.RedBookSO.category === v;
-          default:          return true;
-        }
+        const val = {
+          specie: s.Specie.name_of_specie,
+          genus: s.Specie.Genus.name_of_genus,
+          family: s.Specie.Genus.Family.name_of_family,
+          redBookRF: s.RedBookRF.category,
+          redBookSO: s.RedBookSO.category,
+          place: s.PlaceOfCollection.place_of_collection
+        }[k];
+        return val === v;
       });
     });
+    // Сортировка
     if (this.sortColumn && this.sortDirection) {
-      res.sort((a, b) => {
-        const av = this.getSortValue(a, this.sortColumn!);
-        const bv = this.getSortValue(b, this.sortColumn!);
-        if (av < bv) return this.sortDirection === 'asc' ? -1 : 1;
-        if (av > bv) return this.sortDirection === 'asc' ? 1 : -1;
-        return 0;
+      res.sort((a,b) => {
+        const av = this.getSortValue(a,this.sortColumn!);
+        const bv = this.getSortValue(b,this.sortColumn!);
+        return av < bv ? (this.sortDirection==='asc'? -1:1)
+                      : av > bv ? (this.sortDirection==='asc'? 1:-1)
+                      : 0;
       });
     }
     return res;

@@ -7,7 +7,8 @@ exports.getAllRedBooks = async (req, res) => {
         { model: BookLevel },
         { model: Seed, as: 'RedBookRF' },
         { model: Seed, as: 'RedBookSO' }
-      ]
+      ],
+      order: [['id', 'ASC']]
     });
     res.json(redBooks);
   } catch (error) {

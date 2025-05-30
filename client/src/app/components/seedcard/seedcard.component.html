@@ -1,0 +1,61 @@
+<div *ngIf="loading" class="loading">Загрузка данных семени…</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+<div *ngIf="!loading && seed" class="seed-card-container">
+  <button class="btn-back" [routerLink]="['/collection']">← Назад к коллекции</button>
+  <h2>Карточка семени: {{ seed.seed_name }}</h2>
+  <dl>
+    <dt>ID</dt>
+    <dd>{{ seed.seed_id }}</dd>
+
+    <dt>Название</dt>
+    <dd>{{ seed.seed_name }}</dd>
+
+    <dt>Вид</dt>
+    <dd>{{ seed.Specie.name_of_specie }}</dd>
+
+    <dt>Род</dt>
+    <dd>{{ seed.Specie.Genus.name_of_genus }}</dd>
+
+    <dt>Семейство</dt>
+    <dd>{{ seed.Specie.Genus.Family.name_of_family }}</dd>
+
+    <dt>Дата сбора</dt>
+    <dd>{{ seed.date_of_collection | date:'yyyy-MM-dd' }}</dd>
+
+    <dt>Выполненных</dt>
+    <dd>{{ seed.completed_seeds }}</dd>
+
+    <dt>Всхожесть (%)</dt>
+    <dd>{{ seed.seed_germination }}</dd>
+
+    <dt>Влажность (%)</dt>
+    <dd>{{ seed.seed_moisture }}</dd>
+
+    <dt>GPS высота</dt>
+    <dd>{{ seed.gpsaltitude }}</dd>
+
+    <dt>GPS долгота</dt>
+    <dd>{{ seed.gpslongitude }}</dd>
+
+    <dt>GPS широта</dt>
+    <dd>{{ seed.gpslatitude }}</dd>
+
+    <dt>Вес 1000 семян</dt>
+    <dd>{{ seed.weight_of1000seeds }}</dd>
+
+    <dt>Количество</dt>
+    <dd>{{ seed.number_of_seeds }}</dd>
+
+    <dt>Описание</dt>
+    <dd>{{ seed.comment }}</dd>
+
+    <dt>Красная книга РФ</dt>
+    <dd>{{ seed.RedBookRF.category }}</dd>
+
+    <dt>Красная книга СО</dt>
+    <dd>{{ seed.RedBookSO.category }}</dd>
+
+    <dt>Место сбора</dt>
+    <dd>{{ seed.PlaceOfCollection.place_of_collection }}</dd>
+  </dl>
+</div>

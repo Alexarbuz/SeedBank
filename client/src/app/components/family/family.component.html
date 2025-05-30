@@ -1,0 +1,44 @@
+<div class="family-page">
+  <div class="header-bar">
+    <h2>Таблица семейств</h2>
+    <button class="btn-add" (click)="startAdd()">➕ Добавить семейство</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Загрузка данных…</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!loading" class="family-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let f of families">
+        <td>{{ f.id }}</td>
+        <td>{{ f.name_of_family }}</td>
+        <td>
+          <button class="btn-edit" (click)="startEdit(f)">✎</button>
+          <button class="btn-delete" (click)="deleteFamily(f)">🗑</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="editingFamily"></div>
+  <div class="modal" *ngIf="editingFamily">
+    <h3>{{ editingFamily.id ? 'Редактировать' : 'Добавить' }} семейство</h3>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label>Название семейства</label>
+      <input formControlName="name_of_family" />
+      <div class="buttons">
+        <button type="submit" [disabled]="form.invalid">Сохранить</button>
+        <button type="button" (click)="closeModal()">Отмена</button>
+      </div>
+    </form>
+  </div>
+
+</div>

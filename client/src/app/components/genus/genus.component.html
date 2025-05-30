@@ -1,0 +1,52 @@
+<div class="genus-page">
+  <div class="header-bar">
+    <h2>Таблица родов</h2>
+    <button class="btn-add" (click)="startAdd()">➕ Добавить род</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Загрузка данных…</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!loading" class="genus-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Род</th>
+        <th>Семейство</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let g of genera">
+        <td>{{ g.id }}</td>
+        <td>{{ g.name_of_genus }}</td>
+        <td>{{ g.Family.name_of_family }}</td>
+        <td>
+          <button class="btn-edit" (click)="startEdit(g)">✎</button>
+          <button class="btn-delete" (click)="deleteGenus(g)">🗑</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="editingGenus"></div>
+  <div class="modal" *ngIf="editingGenus">
+    <h3>{{ editingGenus.id ? 'Редактировать' : 'Добавить' }} род</h3>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label>Название рода</label>
+      <input formControlName="name_of_genus" />
+
+      <label>Семейство</label>
+      <select formControlName="family_id">
+        <option *ngFor="let f of families" [value]="f.id">{{ f.name_of_family }}</option>
+      </select>
+
+      <div class="buttons">
+        <button type="submit" [disabled]="form.invalid">Сохранить</button>
+        <button type="button" (click)="closeModal()">Отмена</button>
+      </div>
+    </form>
+  </div>
+
+</div>

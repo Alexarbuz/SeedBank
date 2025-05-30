@@ -1,0 +1,44 @@
+<div class="place-page">
+  <div class="header-bar">
+    <h2>Места сбора</h2>
+    <button class="btn-add" (click)="startAdd()">➕ Добавить</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Загрузка…</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!loading" class="place-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Место</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of places">
+        <td>{{ p.id }}</td>
+        <td>{{ p.place_of_collection }}</td>
+        <td>
+          <button class="btn-edit" (click)="startEdit(p)">✎</button>
+          <button class="btn-delete" (click)="deletePlace(p)">🗑</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="editingPlace"></div>
+  <div class="modal" *ngIf="editingPlace">
+    <h3>{{ editingPlace.id ? 'Редактировать' : 'Добавить' }} место</h3>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label>Место сбора</label>
+      <input formControlName="place_of_collection" />
+
+      <div class="buttons">
+        <button type="submit" [disabled]="form.invalid">Сохранить</button>
+        <button type="button" (click)="closeModal()">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>

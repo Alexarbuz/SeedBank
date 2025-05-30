@@ -1,0 +1,76 @@
+.admin-panel {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.admin-panel h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 700;
+  color: #2c3e50;
+  letter-spacing: 0.5px;
+  font-size: 22px;
+}
+
+.section-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+  text-align: center;
+  justify-content: center;
+}
+
+.section-button,
+.user-button {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: #4a90e2;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+
+.section-button:hover,
+.user-button:hover {
+  background-color: #357ABD;
+  transform: translateX(3px);
+}
+
+.user-management {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Анимация при наведении для всех кнопок */
+button {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .admin-panel {
+    padding: 25px 20px;
+    margin: 20px 15px;
+  }
+  
+  .section-button,
+  .user-button {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+}

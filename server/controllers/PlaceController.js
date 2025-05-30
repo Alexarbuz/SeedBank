@@ -3,7 +3,8 @@ const { PlaceOfCollection, Seed } = require('../models/models');
 exports.getAllPlaces = async (req, res) => {
   try {
     const places = await PlaceOfCollection.findAll({
-      include: [{ model: Seed }]
+      include: [{ model: Seed }],
+      order: [['id', 'ASC']]
     });
     res.json(places);
   } catch (error) {
