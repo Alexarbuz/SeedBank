@@ -9,7 +9,7 @@ export class SeedService {
   constructor(private http: HttpClient) {}
   getAll(): Observable<Seed[]> { return this.http.get<Seed[]>(this.apiUrl); }
   getById(id: string) { return this.http.get<Seed>(`${this.apiUrl}/${id}`); }
-  create(data: Partial<Seed>) { return this.http.post<Seed>(this.apiUrl, data); }
-  update(id: string, data: Partial<Seed>) { return this.http.put<Seed>(`${this.apiUrl}/${id}`, data); }
+  create(formData: FormData): Observable<Seed> { return this.http.post<Seed>(this.apiUrl, formData); }
+  update(id: number, formData: FormData): Observable<Seed> { return this.http.put<Seed>(`${this.apiUrl}/${id}`, formData); }  
   delete(id: string) { return this.http.delete<{message:string}>(`${this.apiUrl}/${id}`); }
 }

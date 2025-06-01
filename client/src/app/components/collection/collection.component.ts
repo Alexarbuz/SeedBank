@@ -26,6 +26,8 @@ export class CollectionComponent implements OnInit {
   editorForm: FormGroup;
   editingSeed: Seed | null = null;
   isEditing = false;
+  pageSize: number = 10;          // сколько строк показывать на странице
+  currentPage: number = 1;        // текущий номер страницы
 
   // фильтры и сортировка
   filters: { [key: string]: string } = {};
@@ -33,7 +35,15 @@ export class CollectionComponent implements OnInit {
   sortDirection: 'asc' | 'desc' | null = null;
   filterToggles: { [key: string]: boolean } = {};
   searchTerm: string = '';
+  selectedImageFile: File | null = null;
+  selectedXrayFile: File | null = null;
 
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+      this.selectedImageFile = file;
+    }
+  }
   species: Specie[] = [];
   redBooksRF: RedBook[] = [];
   redBooksSO: RedBook[] = [];
@@ -49,7 +59,6 @@ export class CollectionComponent implements OnInit {
     private el: ElementRef
   ) {
     this.editorForm = this.fb.group({
-      seed_id: [''],
       seed_name: ['', Validators.required],
       specie_id: [null, Validators.required],
       completed_seeds: ['', Validators.required],
@@ -62,7 +71,7 @@ export class CollectionComponent implements OnInit {
       date_of_collection: ['', Validators.required],
       number_of_seeds: [0, [Validators.required, Validators.min(1)]],
       comment: ['', Validators.required],
-      image: ['', Validators.required],
+      image: [''],
       red_book_rf_id: [null, Validators.required],
       red_book_so_id: [null, Validators.required],
       place_of_collection_id: [null, Validators.required],
@@ -83,6 +92,96 @@ export class CollectionComponent implements OnInit {
     if (!this.isClickInsideFilterElement(event)) {
       this.closeAllFilters();
     }
+  }
+    private getProcessedSeeds(): Seed[] {
+    let res = [...this.seeds];
+    // Поиск
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      res = res.filter(s => s.seed_name.toLowerCase().includes(term));
+    }
+    // Фильтры
+    Object.entries(this.filters).forEach(([k, v]) => {
+      res = res.filter(s => {
+        const val = {
+          specie: s.Specie.name_of_specie,
+          genus: s.Specie.Genus.name_of_genus,
+          family: s.Specie.Genus.Family.name_of_family,
+          redBookRF: s.RedBookRF.category,
+          redBookSO: s.RedBookSO.category,
+          place: s.PlaceOfCollection.place_of_collection
+        }[k];
+        return val === v;
+      });
+    });
+        if (this.sortColumn && this.sortDirection) {
+      res.sort((a, b) => {
+        const av = this.getSortValue(a, this.sortColumn!);
+        const bv = this.getSortValue(b, this.sortColumn!);
+        return av < bv
+          ? (this.sortDirection === 'asc' ? -1 : 1)
+          : av > bv
+            ? (this.sortDirection === 'asc' ? 1 : -1)
+            : 0;
+      });
+    }
+
+    return res;
+  }
+   // Метод, который возвращает только те элементы, что попадут на текущую страницу
+  get paginatedSeeds(): Seed[] {
+    const all = this.getProcessedSeeds();
+    const start = (this.currentPage - 1) * this.pageSize;
+    return all.slice(start, start + this.pageSize);
+  }
+
+  // Узнаём общее число страниц
+  get totalPages(): number {
+    const totalItems = this.getProcessedSeeds().length;
+    return Math.ceil(totalItems / this.pageSize) || 1;
+  }
+
+  // Переход на предыдущую страницу
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  // Переход на следующую страницу
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  // Устанавливаем конкретную страницу (например, при клике на номер)
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+  applyFilter(column: string, value: string, event: MouseEvent) {
+    event.stopPropagation();
+    if (value) this.filters[column] = value;
+    else delete this.filters[column];
+    this.filterToggles[column] = false;
+    this.currentPage = 1; // сбрасываем на первую страницу при изменении фильтров
+  }
+
+  setSort(column: string) {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc'
+        ? 'desc'
+        : this.sortDirection === 'desc'
+          ? null
+          : 'asc';
+      if (!this.sortDirection) this.sortColumn = null;
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.currentPage = 1; // сбрасываем на первую страницу при изменении сортировки
   }
 
   // Проверяем, был ли клик внутри фильтра
@@ -152,22 +251,8 @@ export class CollectionComponent implements OnInit {
     return Array.from(new Set(vals)).sort();
   }
 
-  applyFilter(column: string, value: string, event: MouseEvent) {
-    event.stopPropagation();
-    if (value) this.filters[column] = value;
-    else delete this.filters[column];
-    this.filterToggles[column] = false;
-  }
-
-  setSort(column: string) {
-    if (this.sortColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc'
-        : this.sortDirection === 'desc' ? null : 'asc';
-      if (!this.sortDirection) this.sortColumn = null;
-    } else {
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
-    }
+  onSearchChange() {
+    this.currentPage = 1;
   }
 
   getSortValue(seed: Seed, column: string): any {
@@ -245,19 +330,61 @@ export class CollectionComponent implements OnInit {
     this.editingSeed = null;
     this.editorForm.reset();
   }
+    onImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.selectedImageFile = file;
+    }
+  }
+  onXrayImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.selectedXrayFile = file;
+    }
+  }
   addSeed() {
     if (this.editorForm.invalid) return;
-    this.seedService.create(this.editorForm.value).subscribe(() => {
+
+    const formData = new FormData();
+    // Текстовые поля
+    Object.entries(this.editorForm.value).forEach(([key, value]) => {
+      formData.append(key, (value as any));
+    });
+    // Если выбрали первый файл
+    if (this.selectedImageFile) {
+      formData.append('image', this.selectedImageFile);
+    }
+    // Если выбрали второй файл
+    if (this.selectedXrayFile) {
+      formData.append('xrayimage', this.selectedXrayFile);
+    }
+
+    this.seedService.create(formData).subscribe(() => {
       this.cancelEdit();
       this.loadSeeds();
     });
   }
+
   updateSeed() {
     if (!this.editingSeed || this.editorForm.invalid) return;
-    this.seedService.update(this.editingSeed.seed_id, this.editorForm.value).subscribe(() => {
-      this.cancelEdit();
-      this.loadSeeds();
+
+    const formData = new FormData();
+    Object.entries(this.editorForm.value).forEach(([key, value]) => {
+      formData.append(key, (value as any));
     });
+    if (this.selectedImageFile) {
+      formData.append('image', this.selectedImageFile);
+    }
+    if (this.selectedXrayFile) {
+      formData.append('xrayimage', this.selectedXrayFile);
+    }
+
+    this.seedService
+      .update(+this.editingSeed!.seed_id, formData)
+      .subscribe(() => {
+        this.cancelEdit();
+        this.loadSeeds();
+      });
   }
   deleteSeed(s: Seed) {
     if (!confirm('Удалить эту запись?')) return;

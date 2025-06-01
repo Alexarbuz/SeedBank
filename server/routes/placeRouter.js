@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middlewares/authMiddleware')();
+const checkRoleMiddleware = require('../middlewares/checkRoleMiddleware');
 const {
   getAllPlaces,
   getPlaceById,
@@ -10,8 +12,8 @@ const {
 
 router.get('/', getAllPlaces);
 router.get('/:id', getPlaceById);
-router.post('/', createPlace);
-router.put('/:id', updatePlace);
-router.delete('/:id', deletePlace);
+router.post('/', authMiddleware, checkRoleMiddleware(['ADMIN']), createPlace);
+router.put('/:id', authMiddleware, checkRoleMiddleware(['ADMIN']), updatePlace);
+router.delete('/:id', authMiddleware, checkRoleMiddleware(['ADMIN']), deletePlace);
 
 module.exports = router;

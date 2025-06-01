@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path'); 
 const { sequelize } = require('./models/models.js'); // Правильный путь к models.js
 
 const app = express();
@@ -29,6 +30,7 @@ app.use('/api/places', require('./routes/placeRouter'));
 app.use('/api/roles', require('./routes/roleRouter'));
 app.use('/api/accounts', require('./routes/accountRouter'));
 app.use('/api/auth', require('./routes/authRouter'));
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // Обработка ошибок
 app.use((err, req, res, next) => {

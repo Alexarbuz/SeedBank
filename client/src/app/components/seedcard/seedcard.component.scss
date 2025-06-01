@@ -1,12 +1,13 @@
 .seed-card-container {
-  max-width: 600px;
+  max-width: 900px;
   margin: 2rem auto;
-  padding: 1.5rem;
+  padding: 2rem;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  position: relative;
 }
 
 .btn-back {
@@ -15,34 +16,93 @@
   color: #4a90e2;
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.2s;
 }
-
 .btn-back:hover {
+  color: #2a6fb8;
   text-decoration: underline;
 }
 
 h2 {
-  margin-bottom: 1rem;
-  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.875rem;
   color: #333;
+  text-align: center;
 }
 
-dl {
+.seed-content {
+  display: flex;
+  gap: 2rem;
+}
+
+.seed-images-panel {
+  flex: 0 0 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.image-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.seed-image {
+  width: 100%;
+  max-width: 220px;
+  max-height: 220px;
+  object-fit: contain;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.seed-image.clickable {
+  cursor: zoom-in;
+  transition: transform 0.2s;
+}
+.seed-image.clickable:hover {
+  transform: scale(1.02);
+}
+
+.no-image {
+  font-size: 0.9rem;
+  color: #aaa;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.seed-info-panel {
+  flex: 1;
+}
+
+.seed-info-panel dl {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1fr 2fr;
   row-gap: 0.75rem;
   column-gap: 1rem;
 }
 
-dt {
+.seed-info-panel dt {
   font-weight: 600;
   color: #555;
   text-align: right;
+  padding-right: 0.5rem;
 }
 
-dd {
+.seed-info-panel dd {
   margin: 0;
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 0.75rem;
   background: #f9f9f9;
   border-radius: 4px;
   color: #333;
@@ -50,6 +110,27 @@ dd {
 
 img {
   max-width: 100%;
+  display: block;
+}
+
+/* Стили оверлея для увеличенного изображения */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.overlay-image {
+  max-width: 90%;
+  max-height: 90%;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  cursor: zoom-out;
 }

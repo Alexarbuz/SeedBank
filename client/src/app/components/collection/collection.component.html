@@ -1,163 +1,279 @@
 <div class="header-bar">
   <h2>Коллекция семян</h2>
-  <input type="text" placeholder="Поиск по названию..." class="search-input"
-         [(ngModel)]="searchTerm" />
-  <button *ngIf="isAdmin()" (click)="startAdd()" class="btn-add">➕ Добавить семя</button>
+  <input
+    type="text"
+    placeholder="Поиск по названию..."
+    class="search-input"
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="onSearchChange()"
+  />
+  <button *ngIf="isAdmin()" (click)="startAdd()" class="btn-add">
+    ➕ Добавить семя
+  </button>
 </div>
+
 <div *ngIf="loading" class="loading">Загрузка данных…</div>
 <div *ngIf="error" class="error">{{ error }}</div>
 
-<table *ngIf="!loading && !error" class="seed-table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Название</th>
+<div *ngIf="!loading && !error" class="seed-table-wrapper">
+  <table class="seed-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <!-- Текстовые фильтры -->
+        <th class="header-cell" (click)="toggleFilter('specie', $event)">
+          Вид
+          <span *ngIf="sortColumn === 'specie'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="header-cell" (click)="toggleFilter('genus', $event)">
+          Род
+        </th>
+        <th class="header-cell" (click)="toggleFilter('family', $event)">
+          Семейство
+        </th>
+        <!-- Дата и числовая сортировка -->
+        <th class="sortable-header" (click)="setSort('date_of_collection')">
+          Дата сбора
+          <span *ngIf="sortColumn === 'date_of_collection'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="sortable-header" (click)="setSort('completed_seeds')">
+          Выполненных
+          <span *ngIf="sortColumn === 'completed_seeds'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="sortable-header" (click)="setSort('seed_germination')">
+          Всхожесть
+          <span *ngIf="sortColumn === 'seed_germination'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="sortable-header" (click)="setSort('seed_moisture')">
+          Влажность
+          <span *ngIf="sortColumn === 'seed_moisture'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="sortable-header" (click)="setSort('gpsaltitude')">
+          GPS высота
+          <span *ngIf="sortColumn === 'gpsaltitude'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="sortable-header" (click)="setSort('gpslatitude')">
+          GPS широта
+          <span *ngIf="sortColumn === 'gpslatitude'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="sortable-header" (click)="setSort('gpslongitude')">
+          GPS долгота
+          <span *ngIf="sortColumn === 'gpslongitude'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="sortable-header" (click)="setSort('weight_of1000seeds')">
+          Вес 1000
+          <span *ngIf="sortColumn === 'weight_of1000seeds'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th class="sortable-header" (click)="setSort('number_of_seeds')">
+          Количество
+          <span *ngIf="sortColumn === 'number_of_seeds'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <!-- Ещё текстовые фильтры -->
+        <th class="header-cell" (click)="toggleFilter('redBookRF', $event)">
+          Красная книга РФ
+        </th>
+        <th class="header-cell" (click)="toggleFilter('redBookSO', $event)">
+          Красная книга СО
+        </th>
+        <th class="header-cell" (click)="toggleFilter('place', $event)">
+          Место сбора
+        </th>
+        <th *ngIf="isAdmin()">Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of paginatedSeeds">
+        <td>{{ s.seed_id }}</td>
+        <td>
+          <a [routerLink]="['/seeds', s.seed_id]" class="clickable-link">
+            {{ s.seed_name }}
+          </a>
+        </td>
+        <td>{{ s.Specie.name_of_specie }}</td>
+        <td>{{ s.Specie.Genus.name_of_genus }}</td>
+        <td>{{ s.Specie.Genus.Family.name_of_family }}</td>
+        <td>{{ s.date_of_collection | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ s.completed_seeds }}</td>
+        <td>{{ s.seed_germination }}</td>
+        <td>{{ s.seed_moisture }}</td>
+        <td>{{ s.gpsaltitude }}</td>
+        <td>{{ s.gpslatitude }}</td>
+        <td>{{ s.gpslongitude }}</td>
+        <td>{{ s.weight_of1000seeds }}</td>
+        <td>{{ s.number_of_seeds }}</td>
+        <td>{{ s.RedBookRF.category }}</td>
+        <td>{{ s.RedBookSO.category }}</td>
+        <td>{{ s.PlaceOfCollection.place_of_collection }}</td>
+        <td *ngIf="isAdmin()">
+          <button (click)="startEdit(s)" class="btn-edit">✎</button>
+          <button (click)="deleteSeed(s)" class="btn-delete">🗑</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-      <!-- Текстовые фильтры -->
-      <th class="header-cell" (click)="toggleFilter('specie', $event)">
-        Вид
-        <span *ngIf="sortColumn==='specie'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      <th class="header-cell" (click)="toggleFilter('genus', $event)">Род</th>
-      <th class="header-cell" (click)="toggleFilter('family', $event)">Семейство</th>
-
-      <!-- Дата и числовая сортировка -->
-      <th class="sortable-header" (click)="setSort('date_of_collection')">
-        Дата сбора
-        <span *ngIf="sortColumn==='date_of_collection'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      <th class="sortable-header" (click)="setSort('completed_seeds')">
-        Выполненных
-        <span *ngIf="sortColumn==='completed_seeds'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      <th class="sortable-header" (click)="setSort('seed_germination')">
-        Всхожесть
-        <span *ngIf="sortColumn==='seed_germination'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      <th class="sortable-header" (click)="setSort('seed_moisture')">
-        Влажность
-        <span *ngIf="sortColumn==='seed_moisture'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      <th class="sortable-header" (click)="setSort('gpsaltitude')">
-        GPS высота
-        <span *ngIf="sortColumn==='gpsaltitude'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      <th class="sortable-header" (click)="setSort('gpslatitude')">GPS широта</th>
-      <th class="sortable-header" (click)="setSort('gpslongitude')">GPS долгота</th>
-      <th class="sortable-header" (click)="setSort('weight_of1000seeds')">
-        Вес 1000
-        <span *ngIf="sortColumn==='weight_of1000seeds'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      <th>Изображение</th>
-      <th class="sortable-header" (click)="setSort('number_of_seeds')">
-        Количество
-        <span *ngIf="sortColumn==='number_of_seeds'">{{ sortDirection==='asc'?'▲':'▼' }}</span>
-      </th>
-      <th>Описание</th>
-
-      <!-- Ещё текстовые фильтры -->
-      <th class="header-cell" (click)="toggleFilter('redBookRF', $event)">Красная книга РФ</th>
-      <th class="header-cell" (click)="toggleFilter('redBookSO', $event)">Красная книга СО</th>
-      <th class="header-cell" (click)="toggleFilter('place', $event)">Место сбора</th>
-
-      <th *ngIf="isAdmin()">Действия</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let s of getFilteredAndSortedSeeds()">
-      <td>{{ s.seed_id }}</td>
-      <td>
-        <a [routerLink]="['/seeds', s.seed_id]" class="clickable-link">
-          {{ s.seed_name }}
-        </a>
-      </td>
-      <td>{{ s.Specie.name_of_specie }}</td>
-      <td>{{ s.Specie.Genus.name_of_genus }}</td>
-      <td>{{ s.Specie.Genus.Family.name_of_family }}</td>
-      <td>{{ s.date_of_collection | date:'yyyy-MM-dd' }}</td>
-      <td>{{ s.completed_seeds }}</td>
-      <td>{{ s.seed_germination }}</td>
-      <td>{{ s.seed_moisture }}</td>
-      <td>{{ s.gpsaltitude }}</td>
-      <td>{{ s.gpslongitude }}</td>
-      <td>{{ s.gpslatitude }}</td>
-      <td>{{ s.weight_of1000seeds }}</td>
-      <td>{{ s.image }}</td>
-      <td>{{ s.number_of_seeds }}</td>
-      <td>{{ s.comment }}</td>
-      <td>{{ s.RedBookRF.category }}</td>
-      <td>{{ s.RedBookSO.category }}</td>
-      <td>{{ s.PlaceOfCollection.place_of_collection }}</td>
-      <td *ngIf="isAdmin()">
-        <button (click)="startEdit(s)" class="btn-edit">✎</button>
-        <button (click)="deleteSeed(s)" class="btn-delete">🗑</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<!-- Навигация по страницам -->
+<div *ngIf="!loading && !error" class="pagination-container">
+  <button (click)="prevPage()" [disabled]="currentPage === 1">
+    ◀ Пред.
+  </button>
+  <ng-container *ngFor="let _ of [].constructor(totalPages); let i = index">
+    <button
+      [ngClass]="{ 'active-page': currentPage === i + 1 }"
+      (click)="goToPage(i + 1)"
+    >
+      {{ i + 1 }}
+    </button>
+  </ng-container>
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+    След. ▶
+  </button>
+</div>
 
 <!-- Внешние dropdown’ы -->
-<div *ngIf="filterToggles['specie']" class="dropdown"
-     [style.top.px]="getDropdownPosition('specie').y"
-     [style.left.px]="getDropdownPosition('specie').x">
+<div
+  *ngIf="filterToggles['specie']"
+  class="dropdown"
+  [style.top.px]="getDropdownPosition('specie').y"
+  [style.left.px]="getDropdownPosition('specie').x"
+>
   <ul>
-    <li (click)="applyFilter('specie','', $event)">Все</li>
-    <li *ngFor="let v of getUniqueValues('specie')" (click)="applyFilter('specie',v, $event)">{{ v }}</li>
+    <li (click)="applyFilter('specie', '', $event)">Все</li>
+    <li
+      *ngFor="let v of getUniqueValues('specie')"
+      (click)="applyFilter('specie', v, $event)"
+    >
+      {{ v }}
+    </li>
   </ul>
 </div>
-<div *ngIf="filterToggles['genus']" class="dropdown"
-     [style.top.px]="getDropdownPosition('genus').y"
-     [style.left.px]="getDropdownPosition('genus').x">
+
+<div
+  *ngIf="filterToggles['genus']"
+  class="dropdown"
+  [style.top.px]="getDropdownPosition('genus').y"
+  [style.left.px]="getDropdownPosition('genus').x"
+>
   <ul>
-    <li (click)="applyFilter('genus','', $event)">Все</li>
-    <li *ngFor="let v of getUniqueValues('genus')" (click)="applyFilter('genus',v, $event)">{{ v }}</li>
+    <li (click)="applyFilter('genus', '', $event)">Все</li>
+    <li
+      *ngFor="let v of getUniqueValues('genus')"
+      (click)="applyFilter('genus', v, $event)"
+    >
+      {{ v }}
+    </li>
   </ul>
 </div>
-<div *ngIf="filterToggles['family']" class="dropdown"
-     [style.top.px]="getDropdownPosition('family').y"
-     [style.left.px]="getDropdownPosition('family').x">
+
+<div
+  *ngIf="filterToggles['family']"
+  class="dropdown"
+  [style.top.px]="getDropdownPosition('family').y"
+  [style.left.px]="getDropdownPosition('family').x"
+>
   <ul>
-    <li (click)="applyFilter('family','', $event)">Все</li>
-    <li *ngFor="let v of getUniqueValues('family')" (click)="applyFilter('family',v, $event)">{{ v }}</li>
+    <li (click)="applyFilter('family', '', $event)">Все</li>
+    <li
+      *ngFor="let v of getUniqueValues('family')"
+      (click)="applyFilter('family', v, $event)"
+    >
+      {{ v }}
+    </li>
   </ul>
 </div>
-<div *ngIf="filterToggles['redBookRF']" class="dropdown"
-     [style.top.px]="getDropdownPosition('redBookRF').y"
-     [style.left.px]="getDropdownPosition('redBookRF').x">
+
+<div
+  *ngIf="filterToggles['redBookRF']"
+  class="dropdown"
+  [style.top.px]="getDropdownPosition('redBookRF').y"
+  [style.left.px]="getDropdownPosition('redBookRF').x"
+>
   <ul>
-    <li (click)="applyFilter('redBookRF','', $event)">Все</li>
-    <li *ngFor="let v of getUniqueValues('redBookRF')" (click)="applyFilter('redBookRF',v, $event)">{{ v }}</li>
+    <li (click)="applyFilter('redBookRF', '', $event)">Все</li>
+    <li
+      *ngFor="let v of getUniqueValues('redBookRF')"
+      (click)="applyFilter('redBookRF', v, $event)"
+    >
+      {{ v }}
+    </li>
   </ul>
 </div>
-<div *ngIf="filterToggles['redBookSO']" class="dropdown"
-     [style.top.px]="getDropdownPosition('redBookSO').y"
-     [style.left.px]="getDropdownPosition('redBookSO').x">
+
+<div
+  *ngIf="filterToggles['redBookSO']"
+  class="dropdown"
+  [style.top.px]="getDropdownPosition('redBookSO').y"
+  [style.left.px]="getDropdownPosition('redBookSO').x"
+>
   <ul>
-    <li (click)="applyFilter('redBookSO','', $event)">Все</li>
-    <li *ngFor="let v of getUniqueValues('redBookSO')" (click)="applyFilter('redBookSO',v, $event)">{{ v }}</li>
+    <li (click)="applyFilter('redBookSO', '', $event)">Все</li>
+    <li
+      *ngFor="let v of getUniqueValues('redBookSO')"
+      (click)="applyFilter('redBookSO', v, $event)"
+    >
+      {{ v }}
+    </li>
   </ul>
 </div>
-<div *ngIf="filterToggles['place']" class="dropdown"
-     [style.top.px]="getDropdownPosition('place').y"
-     [style.left.px]="getDropdownPosition('place').x">
+
+<div
+  *ngIf="filterToggles['place']"
+  class="dropdown"
+  [style.top.px]="getDropdownPosition('place').y"
+  [style.left.px]="getDropdownPosition('place').x"
+>
   <ul>
-    <li (click)="applyFilter('place','', $event)">Все</li>
-    <li *ngFor="let v of getUniqueValues('place')" (click)="applyFilter('place',v, $event)">{{ v }}</li>
+    <li (click)="applyFilter('place', '', $event)">Все</li>
+    <li
+      *ngFor="let v of getUniqueValues('place')"
+      (click)="applyFilter('place', v, $event)"
+    >
+      {{ v }}
+    </li>
   </ul>
 </div>
+
 <!-- Модальное затемнение -->
-<div class="modal-backdrop" *ngIf="editingSeed !== null" (click)="cancelEdit()"></div>
+<div
+  class="modal-backdrop"
+  *ngIf="editingSeed !== null"
+  (click)="cancelEdit()"
+></div>
+
 <!-- Модальное окно -->
 <div *ngIf="editingSeed !== null" class="modal">
   <h3>{{ editingSeed ? 'Редактировать' : 'Добавить' }} семя</h3>
   <form [formGroup]="editorForm" (ngSubmit)="saveSeed()">
-
     <label>Название</label>
     <input formControlName="seed_name" />
 
     <label>Вид</label>
     <select formControlName="specie_id">
-        <option *ngFor="let sp of species" [value]="sp.id">{{ sp.name_of_specie }}</option>
+      <option *ngFor="let sp of species" [value]="sp.id">
+        {{ sp.name_of_specie }}
+      </option>
     </select>
 
     <label>Дата сбора</label>
@@ -165,7 +281,7 @@
 
     <label>Выполненных</label>
     <input formControlName="completed_seeds" />
-     
+
     <label>Всхожесть</label>
     <input formControlName="seed_germination" />
 
@@ -185,31 +301,41 @@
     <input formControlName="weight_of1000seeds" />
 
     <label>Изображение</label>
-    <input formControlName="image" />
+    <input type="file" (change)="onFileSelected($event)" />
 
+    <label>Изображение Рентгенограммы</label>
+    <input type="file" (change)="onXrayImageSelected($event)" />
 
     <label>Количество</label>
     <input type="number" formControlName="number_of_seeds" />
 
     <label>Описание</label>
     <input formControlName="comment" />
-    
+
     <label>Красная книга РФ</label>
     <select formControlName="red_book_rf_id">
-        <option *ngFor="let r of redBooksRF" [value]="r.id">{{ r.category }}</option>
+      <option *ngFor="let r of redBooksRF" [value]="r.id">
+        {{ r.category }}
+      </option>
     </select>
 
     <label>Красная книга СО</label>
     <select formControlName="red_book_so_id">
-        <option *ngFor="let r of redBooksSO" [value]="r.id">{{ r.category }}</option>
+      <option *ngFor="let r of redBooksSO" [value]="r.id">
+        {{ r.category }}
+      </option>
     </select>
-    
+
     <label>Место сбора</label>
     <select formControlName="place_of_collection_id">
-        <option *ngFor="let p of places" [value]="p.id">{{ p.place_of_collection }}</option>
+      <option *ngFor="let p of places" [value]="p.id">
+        {{ p.place_of_collection }}
+      </option>
     </select>
-    
-    <button type="submit" [disabled]="editorForm.invalid">Сохранить</button>
-    <button type="button" (click)="cancelEdit()">Отмена</button>
+
+    <div class="buttons">
+      <button type="submit" [disabled]="editorForm.invalid">Сохранить</button>
+      <button type="button" (click)="cancelEdit()">Отмена</button>
+    </div>
   </form>
 </div>

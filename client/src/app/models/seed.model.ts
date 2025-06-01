@@ -38,7 +38,8 @@ export interface Seed {
   date_of_collection: string;
   number_of_seeds: number;
   comment: string;
-  image: string;
+  image: string | null;
+  xrayimage: string | null;
   account_id: number;
   Specie: Specie;
   RedBookRF: RedBook;

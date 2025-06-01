@@ -139,7 +139,6 @@ const Account = sequelize.define('Account', {
   login: DataTypes.STRING,
   password: DataTypes.STRING,
   patronymic: DataTypes.STRING,
-  active: DataTypes.BOOLEAN,
   role_id: {
     type: DataTypes.INTEGER,
     references: {
@@ -163,13 +162,17 @@ const Seed = sequelize.define('Seed', {
   seed_germination: DataTypes.FLOAT,
   seed_moisture: DataTypes.FLOAT,
   date_of_collection: DataTypes.DATEONLY,
-  gpsaltitude: DataTypes.STRING,
-  gpslatitude: DataTypes.STRING,
-  gpslongitude: DataTypes.STRING,
+  gpsaltitude: DataTypes.FLOAT,
+  gpslatitude: DataTypes.FLOAT,
+  gpslongitude: DataTypes.FLOAT,
   weight_of1000seeds: DataTypes.FLOAT,
   number_of_seeds: DataTypes.INTEGER,
   comment: DataTypes.TEXT,
   image: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  xrayimage: {
     type: DataTypes.STRING,
     allowNull: true
   },

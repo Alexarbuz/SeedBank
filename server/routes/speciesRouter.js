@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middlewares/authMiddleware')();
+const checkRoleMiddleware = require('../middlewares/checkRoleMiddleware');
 const {
   getAllSpecies,
   getSpecieById,
@@ -10,8 +12,8 @@ const {
 
 router.get('/', getAllSpecies);
 router.get('/:id', getSpecieById);
-router.post('/', createSpecie);
-router.put('/:id', updateSpecie);
-router.delete('/:id', deleteSpecie);
+router.post('/', authMiddleware, checkRoleMiddleware(['ADMIN']), createSpecie);
+router.put('/:id', authMiddleware, checkRoleMiddleware(['ADMIN']), updateSpecie);
+router.delete('/:id', authMiddleware, checkRoleMiddleware(['ADMIN']), deleteSpecie);
 
 module.exports = router;

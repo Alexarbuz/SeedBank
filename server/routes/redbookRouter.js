@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middlewares/authMiddleware')();
+const checkRoleMiddleware = require('../middlewares/checkRoleMiddleware');
 const {
   getAllRedBooks,
   getRedBookById,
@@ -10,8 +12,8 @@ const {
 
 router.get('/', getAllRedBooks);
 router.get('/:id', getRedBookById);
-router.post('/', createRedBook);
-router.put('/:id', updateRedBook);
-router.delete('/:id', deleteRedBook);
+router.post('/', authMiddleware, checkRoleMiddleware(['ADMIN']), createRedBook);
+router.put('/:id', authMiddleware, checkRoleMiddleware(['ADMIN']), updateRedBook);
+router.delete('/:id', authMiddleware, checkRoleMiddleware(['ADMIN']), deleteRedBook);
 
 module.exports = router;

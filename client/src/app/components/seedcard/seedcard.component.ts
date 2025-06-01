@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SeedService } from '../../services/seed.service';
 import { Seed } from '../../models/seed.model';
+
 @Component({
   selector: 'app-seed-card',
   standalone: true,
@@ -14,6 +15,7 @@ export class SeedCardComponent implements OnInit {
   seed?: Seed;
   loading = true;
   error = '';
+  enlargedImage: string | null = null; // URL увеличенного изображения
 
   constructor(
     private route: ActivatedRoute,
@@ -37,5 +39,20 @@ export class SeedCardComponent implements OnInit {
       this.error = 'Некорректный идентификатор семени.';
       this.loading = false;
     }
+  }
+
+  onImgError(event: Event) {
+    const imgEl = event.target as HTMLImageElement;
+    imgEl.src = 'http://localhost:5000/static/uploads/seed.png';
+  }
+
+  // Открыть оверлей с увеличенным изображением
+  openOverlay(url: string) {
+    this.enlargedImage = url;
+  }
+
+  // Закрыть оверлей
+  closeOverlay() {
+    this.enlargedImage = null;
   }
 }

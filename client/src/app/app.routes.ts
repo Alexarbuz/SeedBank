@@ -11,6 +11,7 @@ import { SpecieComponent } from './components/specie/specie.component';
 import { PlaceComponent } from './components/place/place.component';
 import { UsersComponent } from './components/users/users.component';
 import { FamilyComponent } from './components/family/family.component';
+import { ContactsComponent } from './components/contacts/contacts.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // Главная по умолчанию
@@ -24,5 +25,6 @@ export const routes: Routes = [
   { path: 'adminpanel/genus', component: GenusComponent},
   { path: 'adminpanel/specie', component: SpecieComponent},
   { path: 'adminpanel/place', component: PlaceComponent},
-  { path: 'adminpanel/user', component: UsersComponent}
+  { path: 'adminpanel/user', component: UsersComponent},
+  { path: 'contacts', component: ContactsComponent}
 ];

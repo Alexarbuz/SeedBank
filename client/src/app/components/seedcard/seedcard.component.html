@@ -1,61 +1,109 @@
 <div *ngIf="loading" class="loading">Загрузка данных семени…</div>
 <div *ngIf="error" class="error">{{ error }}</div>
+
 <div *ngIf="!loading && seed" class="seed-card-container">
   <button class="btn-back" [routerLink]="['/collection']">← Назад к коллекции</button>
+
   <h2>Карточка семени: {{ seed.seed_name }}</h2>
-  <dl>
-    <dt>ID</dt>
-    <dd>{{ seed.seed_id }}</dd>
 
-    <dt>Название</dt>
-    <dd>{{ seed.seed_name }}</dd>
+  <div class="seed-content">
+    <!-- Левая панель с изображениями -->
+    <div class="seed-images-panel">
+      <div class="image-wrapper">
+        <span class="image-label">Основное изображение</span>
+        <ng-container *ngIf="seed.image; else noImageMain">
+          <img
+            [src]="seed.image"
+            alt="Изображение семени {{ seed.seed_name }}"
+            class="seed-image clickable"
+            (error)="onImgError($event)"
+            (click)="openOverlay(seed.image)"
+          />
+        </ng-container>
+        <ng-template #noImageMain>
+          <div class="no-image">— нет изображения —</div>
+        </ng-template>
+      </div>
 
-    <dt>Вид</dt>
-    <dd>{{ seed.Specie.name_of_specie }}</dd>
+      <div class="image-wrapper">
+        <span class="image-label">Рентгенограмма</span>
+        <ng-container *ngIf="seed.xrayimage; else noImageXray">
+          <img
+            [src]="seed.xrayimage"
+            alt="X-Ray семени {{ seed.seed_name }}"
+            class="seed-image clickable"
+            (error)="onImgError($event)"
+            (click)="openOverlay(seed.xrayimage)"
+          />
+        </ng-container>
+        <ng-template #noImageXray>
+          <div class="no-image">— нет X-Ray —</div>
+        </ng-template>
+      </div>
+    </div>
 
-    <dt>Род</dt>
-    <dd>{{ seed.Specie.Genus.name_of_genus }}</dd>
+    <!-- Правая панель с текстовой информацией -->
+    <div class="seed-info-panel">
+      <dl>
+        <dt>ID</dt>
+        <dd>{{ seed.seed_id }}</dd>
 
-    <dt>Семейство</dt>
-    <dd>{{ seed.Specie.Genus.Family.name_of_family }}</dd>
+        <dt>Название</dt>
+        <dd>{{ seed.seed_name }}</dd>
 
-    <dt>Дата сбора</dt>
-    <dd>{{ seed.date_of_collection | date:'yyyy-MM-dd' }}</dd>
+        <dt>Вид</dt>
+        <dd>{{ seed.Specie.name_of_specie }}</dd>
 
-    <dt>Выполненных</dt>
-    <dd>{{ seed.completed_seeds }}</dd>
+        <dt>Род</dt>
+        <dd>{{ seed.Specie.Genus.name_of_genus }}</dd>
 
-    <dt>Всхожесть (%)</dt>
-    <dd>{{ seed.seed_germination }}</dd>
+        <dt>Семейство</dt>
+        <dd>{{ seed.Specie.Genus.Family.name_of_family }}</dd>
 
-    <dt>Влажность (%)</dt>
-    <dd>{{ seed.seed_moisture }}</dd>
+        <dt>Дата сбора</dt>
+        <dd>{{ seed.date_of_collection | date:'yyyy-MM-dd' }}</dd>
 
-    <dt>GPS высота</dt>
-    <dd>{{ seed.gpsaltitude }}</dd>
+        <dt>Выполненных</dt>
+        <dd>{{ seed.completed_seeds }}</dd>
 
-    <dt>GPS долгота</dt>
-    <dd>{{ seed.gpslongitude }}</dd>
+        <dt>Всхожесть (%)</dt>
+        <dd>{{ seed.seed_germination }}</dd>
 
-    <dt>GPS широта</dt>
-    <dd>{{ seed.gpslatitude }}</dd>
+        <dt>Влажность (%)</dt>
+        <dd>{{ seed.seed_moisture }}</dd>
 
-    <dt>Вес 1000 семян</dt>
-    <dd>{{ seed.weight_of1000seeds }}</dd>
+        <dt>GPS высота</dt>
+        <dd>{{ seed.gpsaltitude }}</dd>
 
-    <dt>Количество</dt>
-    <dd>{{ seed.number_of_seeds }}</dd>
+        <dt>GPS долгота</dt>
+        <dd>{{ seed.gpslongitude }}</dd>
 
-    <dt>Описание</dt>
-    <dd>{{ seed.comment }}</dd>
+        <dt>GPS широта</dt>
+        <dd>{{ seed.gpslatitude }}</dd>
 
-    <dt>Красная книга РФ</dt>
-    <dd>{{ seed.RedBookRF.category }}</dd>
+        <dt>Вес 1000 семян</dt>
+        <dd>{{ seed.weight_of1000seeds }}</dd>
 
-    <dt>Красная книга СО</dt>
-    <dd>{{ seed.RedBookSO.category }}</dd>
+        <dt>Количество</dt>
+        <dd>{{ seed.number_of_seeds }}</dd>
 
-    <dt>Место сбора</dt>
-    <dd>{{ seed.PlaceOfCollection.place_of_collection }}</dd>
-  </dl>
+        <dt>Описание</dt>
+        <dd>{{ seed.comment }}</dd>
+
+        <dt>Красная книга РФ</dt>
+        <dd>{{ seed.RedBookRF.category }}</dd>
+
+        <dt>Красная книга СО</dt>
+        <dd>{{ seed.RedBookSO.category }}</dd>
+
+        <dt>Место сбора</dt>
+        <dd>{{ seed.PlaceOfCollection.place_of_collection }}</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<!-- Оверлей для увеличенного изображения -->
+<div class="overlay" *ngIf="enlargedImage" (click)="closeOverlay()">
+  <img [src]="enlargedImage" alt="Увеличенное изображение" class="overlay-image" />
 </div>
