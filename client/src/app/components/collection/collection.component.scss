@@ -17,6 +17,28 @@ h2 {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+/* Контейнер, чтобы кнопка стояла справа */
+.actions-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;      /* ОБЯЗАТЕЛЬНО: чтобы контейнер был шириной всего родителя */
+  margin-bottom: 1rem;
+}
+
+.btn-export {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-export:hover {
+  background-color: #27ae60;
+}
 .header-bar .btn-add {
   z-index: 1;
   margin-bottom: -0.25rem; /* «поднимает» кнопку ещё ближе к таблице */

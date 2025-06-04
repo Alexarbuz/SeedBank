@@ -11,6 +11,8 @@ import { Specie } from '../../models/specie.model';
 import { RedBook, PlaceOfCollection } from '../../models/seed.model';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-collection',
@@ -393,4 +395,54 @@ export class CollectionComponent implements OnInit {
   saveSeed() {
     this.isEditing ? this.updateSeed() : this.addSeed();
   }
+  exportAllToExcel(): void {
+  // Если нет записей или пользователь не залогинен — не выполняем
+  if (!this.auth.isLoggedIn() || !this.seeds?.length) {
+    return;
+  }
+
+  // Подготавливаем массив объектов для экспорта
+  // В каждой записи — нужные поля из Seed
+  const dataForExcel = this.seeds.map(seed => ({
+    ID: seed.seed_id,
+    Название: seed.seed_name,
+    Вид: seed.Specie.name_of_specie,
+    Род: seed.Specie.Genus.name_of_genus,
+    Семейство: seed.Specie.Genus.Family.name_of_family,
+    'Дата сбора': seed.date_of_collection,
+    'Выполненных': seed.completed_seeds,
+    'Всхожесть (%)': seed.seed_germination,
+    'Влажность (%)': seed.seed_moisture,
+    'GPS высота': seed.gpsaltitude,
+    'GPS долгота': seed.gpslongitude,
+    'GPS широта': seed.gpslatitude,
+    'Вес 1000 семян': seed.weight_of1000seeds,
+    'Количество': seed.number_of_seeds,
+    Описание: seed.comment,
+    'Красная книга РФ': seed.RedBookRF?.category,
+    'Красная книга СО': seed.RedBookSO?.category,
+    'Место сбора': seed.PlaceOfCollection?.place_of_collection
+  }));
+
+  // Преобразуем JS-массив в лист (Worksheet)
+  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataForExcel);
+
+  // Указываем имя листа (например, «Коллекция семян»)
+  const workbook: XLSX.WorkBook = {
+    Sheets: { 'Коллекция семян': worksheet },
+    SheetNames: ['Коллекция семян']
+  };
+
+  // Записываем книгу в бинарный буфер
+  const excelBuffer: any = XLSX.write(workbook, {
+    bookType: 'xlsx',
+    type: 'array'
+  });
+
+  // Формируем Blob и «скачиваем» через FileSaver
+  const blob = new Blob([excelBuffer], {
+    type: 'application/octet-stream'
+  });
+  FileSaver.saveAs(blob, `Коллекция_семян.xlsx`);
+}
 }

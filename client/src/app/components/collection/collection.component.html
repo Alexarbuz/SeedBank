@@ -10,6 +10,15 @@
   <button *ngIf="isAdmin()" (click)="startAdd()" class="btn-add">
     ➕ Добавить семя
   </button>
+<div class="actions-container">
+  <button
+    class="btn-export"
+    *ngIf="auth.isLoggedIn()"
+    (click)="exportAllToExcel()"
+  >
+    📥 Скачать все данные в Excel
+  </button>
+</div>
 </div>
 
 <div *ngIf="loading" class="loading">Загрузка данных…</div>

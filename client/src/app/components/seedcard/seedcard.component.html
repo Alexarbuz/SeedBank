@@ -4,7 +4,9 @@
 <div *ngIf="!loading && seed" class="seed-card-container">
   <button class="btn-back" [routerLink]="['/collection']">← Назад к коллекции</button>
 
-  <h2>Карточка семени: {{ seed.seed_name }}</h2>
+  <h2>Карточка семени: {{ seed.seed_name }} <button class="btn-export" (click)="exportToExcel()" *ngIf="!loading && seed">
+  📥 Экспорт данных в Excel
+</button></h2>
 
   <div class="seed-content">
     <!-- Левая панель с изображениями -->
@@ -99,6 +101,8 @@
         <dt>Место сбора</dt>
         <dd>{{ seed.PlaceOfCollection.place_of_collection }}</dd>
       </dl>
+      <!-- Кнопка экспорта -->
+
     </div>
   </div>
 </div>
